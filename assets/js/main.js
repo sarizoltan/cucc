@@ -74,15 +74,17 @@ function initializeLoading() {
         isLoading = false;
         document.body.style.overflow = 'visible';
         
-        // Trigger entrance animations
-        gsap.from('.hero-content > *', {
-          y: 50,
-          opacity: 0,
-          duration: 1,
-          stagger: 0.2,
-          ease: 'power2.out',
-          delay: 0.3
-        });
+        // Trigger entrance animations if GSAP is available
+        if (typeof gsap !== 'undefined') {
+          gsap.from('.hero-content > *', {
+            y: 50,
+            opacity: 0,
+            duration: 1,
+            stagger: 0.2,
+            ease: 'power2.out',
+            delay: 0.3
+          });
+        }
       }, 300);
     }
   }, 100);
@@ -116,11 +118,13 @@ function toggleTheme() {
   applyTheme(currentTheme);
   localStorage.setItem('theme', currentTheme);
   
-  // Animate theme transition
-  gsap.to(document.body, {
-    duration: 0.3,
-    ease: 'power2.inOut'
-  });
+  // Animate theme transition if GSAP is available
+  if (typeof gsap !== 'undefined') {
+    gsap.to(document.body, {
+      duration: 0.3,
+      ease: 'power2.inOut'
+    });
+  }
 }
 
 function applyTheme(theme) {
@@ -170,8 +174,8 @@ function toggleMobileMenu() {
   elements.navMenu.classList.toggle('active');
   document.body.style.overflow = isMenuOpen ? 'hidden' : 'visible';
   
-  // Animate menu items
-  if (isMenuOpen) {
+  // Animate menu items if GSAP is available
+  if (isMenuOpen && typeof gsap !== 'undefined') {
     gsap.from('.nav-menu.active .nav-item', {
       y: 30,
       opacity: 0,
@@ -198,10 +202,10 @@ function handleSmoothScroll(e) {
     const headerHeight = elements.header.offsetHeight;
     const targetPosition = targetSection.offsetTop - headerHeight;
     
-    gsap.to(window, {
-      scrollTo: targetPosition,
-      duration: 1,
-      ease: 'power2.inOut'
+    // Use native smooth scroll instead of GSAP
+    window.scrollTo({
+      top: targetPosition,
+      behavior: 'smooth'
     });
     
     // Close mobile menu if open
@@ -277,14 +281,16 @@ function handleScroll() {
 }
 
 function scrollToTop() {
-  gsap.to(window, {
-    scrollTo: 0,
-    duration: 1.5,
-    ease: 'power2.inOut'
+  // Use native smooth scroll instead of GSAP
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
   });
 }
 
 function updateParallax(scrollTop) {
+  if (typeof gsap === 'undefined') return;
+  
   const parallaxElements = document.querySelectorAll('.parallax-element');
   parallaxElements.forEach(element => {
     const speed = element.dataset.speed || 0.5;
@@ -345,18 +351,25 @@ function initializeCounters() {
     const target = parseInt(counter.dataset.count);
     const duration = 2;
     
-    gsap.to(counter, {
-      innerHTML: target,
-      duration: duration,
-      ease: 'power2.out',
-      snap: { innerHTML: 1 },
-      onUpdate: function() {
-        counter.classList.add('counting');
-      },
-      onComplete: function() {
-        counter.classList.remove('counting');
-      }
-    });
+    if (typeof gsap !== 'undefined') {
+      gsap.to(counter, {
+        innerHTML: target,
+        duration: duration,
+        ease: 'power2.out',
+        snap: { innerHTML: 1 },
+        onUpdate: function() {
+          counter.classList.add('counting');
+        },
+        onComplete: function() {
+          counter.classList.remove('counting');
+        }
+      });
+    } else {
+      // Fallback counter animation without GSAP
+      counter.innerHTML = target;
+      counter.classList.add('counting');
+      setTimeout(() => counter.classList.remove('counting'), duration * 1000);
+    }
   };
   
   // Intersection Observer for counters

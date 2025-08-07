@@ -71,6 +71,8 @@ function initializeTiltEffects() {
   });
   
   function handleTilt(e) {
+    if (typeof gsap === 'undefined') return;
+    
     const element = e.currentTarget;
     const rect = element.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
@@ -91,6 +93,8 @@ function initializeTiltEffects() {
   }
   
   function resetTilt(e) {
+    if (typeof gsap === 'undefined') return;
+    
     const element = e.currentTarget;
     
     gsap.to(element, {
@@ -110,28 +114,31 @@ function initializeFloatingActionButton() {
   const fabMain = fabBtn.querySelector('.fab-main');
   
   fabBtn.addEventListener('click', () => {
-    // Animate button click
-    gsap.to(fabMain, {
-      scale: 0.9,
-      duration: 0.1,
-      yoyo: true,
-      repeat: 1,
-      ease: 'power2.inOut'
-    });
+    // Animate button click if GSAP is available
+    if (typeof gsap !== 'undefined') {
+      gsap.to(fabMain, {
+        scale: 0.9,
+        duration: 0.1,
+        yoyo: true,
+        repeat: 1,
+        ease: 'power2.inOut'
+      });
+    }
     
     // Show contact form or open chat
     showQuickContact();
   });
   
-  // Floating animation
-  gsap.to(fabMain, {
-    y: -5,
-    duration: 2,
-    repeat: -1,
-    yoyo: true,
-    ease: 'sine.inOut'
-  });
-}
+  // Floating animation if GSAP is available
+  if (typeof gsap !== 'undefined') {
+    gsap.to(fabMain, {
+      y: -5,
+      duration: 2,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut'
+    });
+  }
 
 function showQuickContact() {
   // Create quick contact modal
