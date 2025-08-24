@@ -3,8 +3,12 @@
    GSAP-powered animations and interactions
    ========================================== */
 
-// Initialize GSAP and ScrollTrigger
-gsap.registerPlugin(ScrollTrigger);
+// Initialize GSAP and ScrollTrigger if available
+if (typeof gsap !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+} else {
+  console.warn('GSAP is not loaded - animations will be disabled');
+}
 
 // Animation configuration
 const animationConfig = {
@@ -13,18 +17,22 @@ const animationConfig = {
   stagger: 0.1
 };
 
-// Initialize all animations
+// Initialize all animations if GSAP is available
 document.addEventListener('DOMContentLoaded', function() {
-  initializeScrollAnimations();
-  initializeHeroAnimations();
-  initializeServiceAnimations();
-  initializeBenefitAnimations();
-  initializeProcessAnimations();
-  initializePricingAnimations();
-  initializePortfolioAnimations();
-  initializeContactAnimations();
-  initializeHoverAnimations();
-  initializeTextAnimations();
+  if (typeof gsap !== 'undefined') {
+    initializeScrollAnimations();
+    initializeHeroAnimations();
+    initializeServiceAnimations();
+    initializeBenefitAnimations();
+    initializeProcessAnimations();
+    initializePricingAnimations();
+    initializePortfolioAnimations();
+    initializeContactAnimations();
+    initializeHoverAnimations();
+    initializeTextAnimations();
+  } else {
+    console.warn('GSAP is not loaded - skipping advanced animations');
+  }
 });
 
 // Scroll-triggered animations
